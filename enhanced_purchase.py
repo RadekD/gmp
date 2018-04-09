@@ -26,7 +26,8 @@ def enhanced_purchase(transaction_id, items, revenue,
     if not items:
         raise ValueError('You need to specify at least one item')
 
-    yield from event('ecommerce', 'purchase')
+    for e in event('ecommerce', 'purchase'):
+        yield e 
 
     payload = {
         'pa': 'purchase', 'ti': transaction_id, 'dp': url_page,
