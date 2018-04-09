@@ -1,14 +1,7 @@
-from typing import Dict, Generator, Iterable
-
-from prices import Money
-
-
-def item(
-        name: str, unit_price: Money, quantity: int=None, item_id: str=None,
-        category: str=None, **extra_data) -> Dict:
+def item(name, price, currency, quantity=None, item_id=None, category=None, **extra_data):
     payload = {
-        't': 'item', 'in': name, 'ip': str(unit_price.amount),
-        'cu': unit_price.currency}
+        't': 'item', 'in': name, 'ip': str(price),
+        'cu': currency}
 
     if quantity:
         payload['iq'] = str(int(quantity))
@@ -21,16 +14,14 @@ def item(
     return payload
 
 
-def transaction(
-        transaction_id: str, items: Iterable[Dict], revenue: Money,
-        tax: Money=None, shipping: Money=None, affiliation: str=None,
-        **extra_data) -> Generator[Dict, None, None]:
+def transaction(transaction_id, items, revenue, currency, 
+        tax=None, shipping=None, affiliation=None, **extra_data):
     if not items:
         raise ValueError('You need to specify at least one item')
 
     payload = {
-        't': 'transaction', 'ti': transaction_id, 'tr': str(revenue.amount),
-        'tt': '0', 'cu': revenue.currency}
+        't': 'transaction', 'ti': transaction_id, 'tr': str(revenue),
+        'tt': '0', 'cu': currency}
 
     if affiliation:
         payload['ta'] = affiliation

@@ -1,10 +1,8 @@
-from typing import Dict, Generator
-
 
 def pageview(
-        path: str=None, host_name: str=None, location: str=None,
-        title: str=None, language: str=None, referrer: str=None,
-        **extra_data) -> Generator[Dict, None, None]:
+        path=None, host_name=None, location=None,
+        title=None, language=None, referrer=None,
+        **extra_data):
     payload = {'t': 'pageview'}
 
     if location:

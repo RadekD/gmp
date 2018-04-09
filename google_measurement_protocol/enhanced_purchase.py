@@ -1,15 +1,10 @@
-from typing import Dict, Generator, Iterable
-from prices import Money
-
 from .event import event
 
-
-def enhanced_item(
-        name: str, unit_price: Money, quantity: int=None, item_id: str=None,
-        category: str=None, brand: str=None, variant: str=None,
-        **extra_data) -> Dict:
+def enhanced_item(name, unit_price, quantity=None, item_id=None, 
+        category=None, brand=None, variant=None, **extra_data):
     payload = {
-        'nm': name, 'pr': str(unit_price.amount), 'qt': quantity or 1}
+        'nm': name, 'pr': str(unit_price), 'qt': quantity or 1
+    }
 
     if item_id:
         payload['id'] = item_id
@@ -23,12 +18,11 @@ def enhanced_item(
     payload.update(extra_data)
     return payload
 
-
-def enhanced_purchase(
-        transaction_id: str, items: Iterable[Dict], revenue: Money,
-        url_page: str, tax: Money=None, shipping: Money=None, host: str=None,
-        affiliation: str=None, coupon: str=None,
-        **extra_data) -> Generator[Dict, None, None]:
+def enhanced_purchase(transaction_id, items, revenue,
+        url_page, tax=None, shipping=None, host=None,
+        affiliation=None, coupon=None,
+        **extra_data):
+    
     if not items:
         raise ValueError('You need to specify at least one item')
 
@@ -36,12 +30,12 @@ def enhanced_purchase(
 
     payload = {
         'pa': 'purchase', 'ti': transaction_id, 'dp': url_page,
-        'tr': str(revenue.amount), 'tt': '0'}
+        'tr': str(revenue), 'tt': '0'}
 
     if shipping:
         payload['ts'] = str(shipping)
     if tax is not None:
-        payload['tt'] = str(tax.amount)
+        payload['tt'] = str(tax)
     if host:
         payload['dh'] = host
     if affiliation:
@@ -57,7 +51,7 @@ def enhanced_purchase(
     yield payload
 
 
-def _finalize_enhanced_purchase_item(item: Dict, position: int) -> Dict:
+def _finalize_enhanced_purchase_item(item, position):
     position_prefix = 'pr{0}'.format(position)
     final_item = {}
     for key, value in item.items():

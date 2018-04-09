@@ -1,9 +1,7 @@
-from typing import Dict, Generator
-
 
 def event(
-        category: str, action: str, label: str=None, value: int=None,
-        **extra_data) -> Generator[Dict, None, None]:
+        category, action, label=None, value=None,
+        **extra_data):
     payload = {'t': 'event', 'ec': category, 'ea': action}
     if label:
         payload['el'] = label
